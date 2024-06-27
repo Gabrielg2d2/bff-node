@@ -1,30 +1,25 @@
-export class PostController {
-  constructor(postService) {
-    this.postService = postService;
-  }
+const { PostsService } = require("../services/posts");
+const { CommentsService } = require("../services/comments");
 
-  async getPosts() {
-    return {
-      posts: [
-        {
-          id: 1,
-          title: "Post 1",
-          content: "Content 1",
-        },
-        {
-          id: 2,
-          title: "Post 2",
-          content: "Content 2",
-        },
-      ],
-    };
-  }
+const postService = new PostsService();
+const commentsService = new CommentsService();
+class PostController {
+    async getPosts() {
+        const posts = await postService.getPosts();
+        return posts;
+    }
 
-  async getPostById(id) {
-    return {
-      id,
-      title: "Post 1",
-      content: "Content 1",
-    };
-  }
+    async getPostById(id) {
+        const post = await postService.getPostById(id);
+        const comments = await commentsService.getComments(id);
+
+        return {
+            ...post,
+            comments,
+        };
+    }
 }
+
+module.exports = {
+    PostController,
+};
