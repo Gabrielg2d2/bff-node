@@ -10,8 +10,10 @@ class PostController {
     }
 
     async getPostById(id) {
-        const post = await postService.getPostById(id);
-        const comments = await commentsService.getComments(id);
+        const [post, comments] = await Promise.all([
+            postService.getPostById(id),
+            commentsService.getComments(id),
+        ]);
 
         return {
             ...post,
